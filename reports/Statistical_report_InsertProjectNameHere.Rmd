@@ -1,0 +1,96 @@
+---
+title: 'Statistical report: XXX'
+subtitle: 'DRAFT'
+author: 'Statistician: Lina Benson'
+  
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 8
+    number_sections: yes
+link-citations: yes
+bibliography: references.bib
+nocite: '@*'
+header-includes:
+   - \usepackage{draftwatermark}
+---
+
+\newpage 
+\tableofcontents 
+\listoffigures
+\listoftables
+\newpage
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, include = TRUE, comment = "",
+  warning = FALSE, message = FALSE, fig.pos = "H",
+  fig.path = "../output/figs/"
+)
+options(knitr.kable.NA = "")
+```
+
+```{r adjust_directory_if_needed, include=FALSE}
+# Uncomment lines below if rmd file is placed in a subdirectory
+knitr::opts_knit$set(root.dir = normalizePath("../"))
+```
+
+```{r load_project}
+# 1. Set options in config/global.dcf
+# 2. Load packages listed in config/global.dcf
+# 3. Import functions and code in lib directory
+# 4. Load data in data directory
+# 5. Run data manipulations in munge directory
+
+library(ProjectTemplate)
+load.project()
+```             
+
+# Data handling
+
+## Files
+
+## Inclusion/exclusion criteria
+
+## Comorbidites
+
+Limitation: Specialiserad öppenvård tillkom först 2001 i patientregistret, för de tidigare observationera (indexdatum 2005) finns därför inte specialiserad öppenvård för åren längs tillbaka. 
+
+## Outcome
+
+## Socioeconomics
+
+The socioeconomic variables from SCB/LISA are from the year prior to the indexyear (so a patient with an indexdate 2015-03-06 will have income, marriage status and education from 2014. 
+
+Limitation: Cohabiting without children are classified as Unmarried. ???
+
+Limitation: Education is not registred for individuals < 25 years.
+
+# Statistical analysis 
+
+## General
+
+`r sessionInfo()$R.version$version.string` [@r] was used, for more details see section [Session info](#sessioninfo) below.
+
+The level of significance is set to 5%, two-sided. No adjustment for multiple comparisons were made.
+
+## Baseline characteristics
+
+# Reproducibility
+
+## R session information {#sessioninfo}
+
+`r sessionInfo()$R.version$version.string` [@r] is used, for more details see below.
+
+```{r sessinfo}
+sessionInfo()
+```
+
+## R code
+
+The R code for all data handling and statistical analyses are found: XXX. I have given XXX access to the repository. It is also possible, on publication since this report is placed there, to make the repository public so as to link to it from the resulting article for increased transparency and code sharing. No data or output is stored in the repository. 
+
+# References
