@@ -7,10 +7,13 @@ recursive_loading: FALSE
 munging: TRUE
 logging: FALSE
 logging_level: INFO
-load_libraries: FALSE
-libraries: reshape2, plyr, tidyverse, stringr, lubridate
-as_factors: TRUE
+load_libraries: TRUE
+libraries: ggplot2, tidyverse, stringi, lubridate, kableExtra, tableone, haven, openxlsx, survival, survminer
+as_factors: FALSE
 tables_type: tibble
 attach_internal_libraries: FALSE
 cache_loaded_data:  TRUE
 sticky_variables: NONE
+
+
+
