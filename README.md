@@ -13,11 +13,11 @@ ProjectTemplate::create.project("my-new-project", template = "statreport_project
 ## change name of R project and reports/Statistical_report
 ## modify packages in global.dcf
 
-# Setting up packrat (management of package dependencies)
-packrat::init() 
+# Setting up renv (management of package dependencies)
+renv::init() 
 install.packages("ProjectTemplate")
 ## install.packages("Any other packages in global.dcf")
-## OR set up via Tools/Project Options/Packrat and add packages in global.dcf to External packages
+renv::snapshot()
 
 # Setting up git (version control)
 ## Delete existing git folder .git
@@ -27,6 +27,7 @@ install.packages("ProjectTemplate")
 ### $ cd "path/my-new-project"
 ### $ git init
 ### $ git remote add origin https://github.com/username/my-new-project
+### $ git push -u origin master
 ```
 
 ## References
@@ -51,7 +52,7 @@ The data consists of Swedish individual patient data and is not public, and ther
 
 ## Instructions
 
-The project uses the R package projectTemplate, http://projecttemplate.net/ and is structured (and run) accordingly. Packrat, https://rstudio.github.io/packrat/, is used for management of package dependencies.
+The project uses the R package projectTemplate, http://projecttemplate.net/ and is structured (and run) accordingly. Renv, https://rstudio.github.io/renv/articles/renv.html, is used for management of package dependencies.
 
 Since the data is not available the code can not be run as is. 
 
