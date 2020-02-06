@@ -20,8 +20,18 @@ install.packages("ProjectTemplate")
 renv::snapshot()
 
 # Setting up git (version control)
+
 ## Delete existing git folder .git
-## Add TODO and OLD to .gitignore in main directory
+
+## Add to .gitignore in main directory:
+## TODO
+## OLD
+## cache/
+## checks/
+## data/
+## docs/
+## output/
+
 ## Create a new remote repository https://github.com/ for the project
 ## Set up a new git repository with a remote with Git Bash: 
 ### $ cd "path/my-new-project"
