@@ -75,9 +75,9 @@ Workflow:
 
 1. Run src/load_munge_cache.R or set loading and munging options in 
 ProjectTemplate::reload.project() to TRUE in 
-reports/Statistical_report_Wardtype.Rmd
+reports/Statistical_report_XX.Rmd
 
-2. Knit reports/Statistical_report_Wardtype.Rmd
+2. Knit reports/Statistical_report_XX.Rmd
 
 ## Publication
 
