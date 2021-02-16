@@ -26,7 +26,6 @@ renv::snapshot()
 ## Add to .gitignore in main directory:
 ## TODO
 ## OLD
-## cache/
 ## checks/
 ## data/
 ## docs/
@@ -50,7 +49,7 @@ https://www.r-bloggers.com/customising-projecttemplate-in-r/
 
 # R code for the project XXX
 
-The aim of this R code is to be transparant and document the data handling 
+The aim of this R code is to be transparent and document the data handling 
 and statistical analyses performed for the project XXX.
 
 ## Language 

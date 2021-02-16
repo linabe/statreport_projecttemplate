@@ -7,22 +7,19 @@ date: "`r Sys.Date()`"
 output:
   pdf_document:
     fig_caption: yes
-    fig_height: 4
-    fig_width: 8
+    fig_height: 7
+    fig_width: 7
     number_sections: yes
 link-citations: yes
 bibliography: references.bib
 nocite: '@*'
-header-includes:
-   - \usepackage{draftwatermark}
 ---
 
 \newpage 
 \tableofcontents 
-\listoffigures
 \listoftables
+\listoffigures
 \newpage
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -44,43 +41,129 @@ knitr::opts_knit$set(root.dir = normalizePath("../"))
 # 3. Import functions and code in lib directory
 
 ProjectTemplate::reload.project()
+
+cacheon <- TRUE
 ```             
 
 # Data handling
 
-## Files
+## Data source
+
+SHFDB3, https://kiheartfailure.github.io/shfdb3/, v 3.x.x. 
 
 ## Inclusion/exclusion criteria
 
-## Comorbidites
+```{r flow}
+#mykable(flow, caption = "Flowchart")
+```
 
-Limitation: Specialiserad öppenvård tillkom först 2001 i patientregistret, för de tidigare observationera (indexdatum 2005) finns därför inte specialiserad öppenvård för åren längs tillbaka. 
+First patient in: `r min(rsdata$shf_indexdtm)` and last patient in: `r max(rsdata$shf_indexdtm)`.  
 
-## Outcome
+The median age (IQR) is `r rsdata %>% summarise(med = dF(median(shf_age), dig = 1),
+                                             q1 = dF(quantile(shf_age, probs = 0.25), dig = 1),
+                                             q3 = dF(quantile(shf_age, probs = 0.75), dig = 1)) %>%
+                                   mutate(out = paste0(med, " (", q1, "-", q3, ")")) %>%
+                                   pull(out)` and 
+`r rsdata %>% count(shf_sex) %>%
+  mutate(perc = dF(n / sum(n) * 100, 1)) %>%
+  filter(shf_sex == "Female") %>%
+  pull(perc)`% females.    
 
-## Socioeconomics
+## Created variables 
 
-The socioeconomic variables from SCB/LISA are from the year prior to the indexyear (so a patient with an indexdate 2015-03-06 will have income, marriage status and education from 2014. 
-
-Limitation: Cohabiting without children are classified as Unmarried. ???
-
-Limitation: Education is not registred for individuals < 25 years.
+```{r npr}
+#mykable(metaout, caption = "Additional outcomes from NPR")
+```
 
 # Statistical analysis 
 
 ## General
 
-`r sessionInfo()$R.version$version.string` [@r] was used, for more details see section [Session info](#sessioninfo) below.
+All analyses were performed using `r sessionInfo()$R.version$version.string` [@r]. 
+The level of significance is set to 5%, two-sided. No adjustment for multiple 
+comparisons were made and therefore the results should be viewed with some care.
 
-The level of significance is set to 5%, two-sided. No adjustment for multiple comparisons were made.
+## Missing data
+
+Missing data was imputed with multiple imputation (n = 10) using mice [@mice]. 
+Variables included in the model are indicated in 
+Table \ref{tab:tab1}. The primary outcome was included as the Nelson-Aalen estimator.
+
+## Propensity scores and matching
+
+A propensity score for treatment was estimated for each patient with 
+logistic regression for each of the 10 imputed datasets using the variables 
+indicated in Table \ref{tab:tab1}. 1:X matching without replacement [@match] 
+was thereafter performed on the average of the resulting 10 ps [@psmatch]. Matching was 
+allowed if the propensity score differed by 0.01 or less. The ability of the ps 
+matching to balance the baseline characteristics was assessed by 
+standardized mean differences.  
+
+1:X has deemed the best option when taking into account the number of patients retained and balance between groups.
+Other matching ratios: `r matchingn`.
 
 ## Baseline characteristics
+
+```{r, child = "../src/tab1.Rmd"}
+
+```
+
+## Outcome analysis
+
+The following outcomes are considered: 
+
+Data were censored at 2019-12-31 or death/emigration. 
+
+The outcomes are presented with the 1 - Kaplan-Meier curves with the overall p 
+from the crude cox regression presented in the figure. Cox proportional hazards regressions were 
+used to model the time to first event analysis and negative 
+binomial regression including the log of time as an offset in the model for 
+the repeated events. 
+
+### Assumptions
+
+The proportional hazards assumption was investigated using the scaled Schoenfeld 
+residuals (cox.zph in [@survival-package]) for the primary outcome. 
+Possible outliers were visually inspected by plotting the dfbetas. 
+=> XXXX. 
+
+The median (min-max) follow-up is 
+`r rsdata %>% summarise(med = dF(median(sos_outtime_death / 365.25 * 12), dig = 1),
+                                             min = dF(min(sos_outtime_death / 365.25 * 12), dig = 1),
+                                             max = dF(max(sos_outtime_death / 365.25 * 12), dig = 1)) %>%
+                                   mutate(out = paste0(med, " (", min, "-", max, ")")) %>%
+                                   pull(out)` months for a total of 
+                                   `r rsdata %>% summarise(sumpy = dF(sum(sos_outtime_death) / 365.25, dig = 0)) %>%
+                                   pull(sumpy)` patient-years of follow-up.
+
+
+```{r, child = "../src/km.Rmd"}
+
+```
+
+```{r, child = "../src/outtab.Rmd"}
+
+```
+
+\clearpage
+\newpage
+
+### Subgroups
+
+Performed using an interaction term between XX and XX on the patients in the matched cohort. 
+Note that there is missing data for XX so the matching (and thereby the adjustment) 
+may therefore be incomplete. 
+
+```{r, child = "../src/forest.Rmd"}
+
+```
+
+\clearpage
+\newpage
 
 # Reproducibility
 
 ## R session information {#sessioninfo}
-
-`r sessionInfo()$R.version$version.string` [@r] is used, for more details see below.
 
 ```{r sessinfo}
 sessionInfo()
@@ -88,6 +171,10 @@ sessionInfo()
 
 ## R code
 
-The R code for all data handling and statistical analyses are found: XXX. I have given XXX access to the repository. It is also possible, on publication since this report is placed there, to make the repository public so as to link to it from the resulting article for increased transparency and code sharing. No data or output is stored in the repository. 
+The R code for all data handling and statistical analyses are found: 
+https://github.com/KIHeartFailure/xx. On publication
+the repository will be made public so as to 
+link to it from the resulting article for increased transparency and code sharing.
+No data or output is stored in the repository. 
 
 # References
