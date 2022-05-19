@@ -13,6 +13,14 @@ output:
 link-citations: yes
 bibliography: references.bib
 nocite: '@*'
+urlcolor: blue
+linkcolor: black
+header-includes:
+   - \usepackage{draftwatermark}
+   - \usepackage{subfig}
+   - \usepackage{pdflscape}
+   - \newcommand{\blandscape}{\begin{landscape}}
+   - \newcommand{\elandscape}{\end{landscape}}
 ---
 
 \newpage 
@@ -104,7 +112,7 @@ Other matching ratios: `r matchingn`.
 
 ## Baseline characteristics
 
-```{r, child = "../src/tab1.Rmd"}
+```{r, child = "./src/tab1.Rmd"}
 
 ```
 
@@ -137,11 +145,11 @@ The median (min-max) follow-up is
                                    pull(sumpy)` patient-years of follow-up.
 
 
-```{r, child = "../src/km.Rmd"}
+```{r, child = "./src/km.Rmd"}
 
 ```
 
-```{r, child = "../src/outtab.Rmd"}
+```{r, child = "./src/outtab.Rmd"}
 
 ```
 
@@ -154,7 +162,7 @@ Performed using an interaction term between XX and XX on the patients in the mat
 Note that there is missing data for XX so the matching (and thereby the adjustment) 
 may therefore be incomplete. 
 
-```{r, child = "../src/forest.Rmd"}
+```{r, child = "./src/forest.Rmd"}
 
 ```
 
